@@ -1,5 +1,5 @@
 class fogmail::base(
-  $line,
+  $role,
 ) {
 
   # initialize apt
@@ -84,36 +84,36 @@ class fogmail::base(
     require  => Apt::Source['xtreemfs'],
   }
 
-  file {"/etc/default/fogmail_${line}":
+  file {"/etc/default/fogmail_${role}":
     ensure => file,
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
   }
 
-  case $line {
-    introducer: {
-      class {'xtreemfs::role::directory':
-      }
-      class {'xtreemfs::role::metadata':
-        dir_service  => 'localhost',
-      }
-    }
-    storage: {
-      class {'xtreemfs::role::storage':
-        dir_service => hiera('xstreemfs::dir_server'),
-        object_dir  => '/mnt/xtreemfs',
-      }
-    }
-    client: {}
-  }
+  include "::fogmail::role::${role}"
 
-  file {'/etc/xos/truststore':
+  file {'/etc/xos/xtreemfs/truststore':
     ensure  => directory,
     owner   => 'root',
     group   => 'xtreemfs',
     mode    => '0750',
     require => Anchor[$xtreemfs::internal::workflow::packages],
+  }->
+  file {'/etc/xos/xtreemfs/truststore/certs':
+    ensure  => directory,
+    owner   => 'root',
+    group   => 'xtreemfs',
+    mode    => '0750',
+  }->
+  java_ks {'xtreemfs:ca':
+    ensure       => latest,
+    certificate  => '/ssl/ca/ca.pem',
+    target       => '/etc/xos/xtreemfs/truststore/certs/trusted.jks',
+    password     => hiera('xstreemfs::trusted_cred::pwd'),
+    trustcacerts => true,
+    notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
+
 
 }

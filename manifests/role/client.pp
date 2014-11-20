@@ -1,0 +1,2 @@
+class fogmail::role::client {
+}
