@@ -6,7 +6,7 @@ class fogmail::scripts {
     mode   => '0700',
     owner  => 'root',
     group  => 'root',
-    source => '/scripts/startall',
+    source => 'puppet:///modules/fogmail/scripts/startall',
   }
 
   # Replication stuff
@@ -15,6 +15,6 @@ class fogmail::scripts {
     mode   => '0700',
     owner  => 'postgres',
     group  => 'postgres',
-    source => '/scripts/replication-bootstrap',
+    source => 'puppet:///modules/fogmail/scripts/replication-bootstrap',
   }
 }
