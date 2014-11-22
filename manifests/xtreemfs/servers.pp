@@ -1,4 +1,7 @@
 class fogmail::xtreemfs::servers {
+  
+  $ssl_base = '/vagrant/puppet'
+
   file {'/etc/xos/xtreemfs/truststore':
     ensure  => directory,
     owner   => 'root',
@@ -14,7 +17,7 @@ class fogmail::xtreemfs::servers {
   }->
   java_ks {'xtreemfs:bundle':
     ensure       => latest,
-    certificate  => '/ssl/ca/sub-ca-chain.pem',
+    certificate  => "${ssl_base}/ssl/ca/sub-ca-chain.pem",
     target       => '/etc/xos/xtreemfs/truststore/certs/trusted.jks',
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,

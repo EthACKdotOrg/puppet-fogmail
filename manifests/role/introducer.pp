@@ -1,4 +1,7 @@
 class fogmail::role::introducer {
+
+  $ssl_base = '/vagrant/puppet'
+  
   class {'xtreemfs::role::directory':
     properties => {
       'checksums.enabled'           => 'true',
@@ -33,8 +36,8 @@ class fogmail::role::introducer {
   }
 
   ::openssl::export::pkcs12 {'ds':
-    pkey     => '/ssl/certs/ds.key',
-    cert     => '/ssl/certs/ds.crt',
+    pkey     => "${ssl_base}/ssl/certs/ds.key",
+    cert     => "${ssl_base}/ssl/certs/ds.crt",
     out_pass => hiera('xtreemfs::service_cred::pwd'),
     require  => File['/etc/xos/xtreemfs/truststore/certs'],
   }->
@@ -47,8 +50,8 @@ class fogmail::role::introducer {
   }
 
   ::openssl::export::pkcs12 {'mrc':
-    pkey     => '/ssl/certs/mrc.key',
-    cert     => '/ssl/certs/mrc.crt',
+    pkey     => "${ssl_base}/ssl/certs/mrc.key",
+    cert     => "${ssl_base}/ssl/certs/mrc.crt",
     out_pass => hiera('xtreemfs::service_cred::pwd'),
     require  => File['/etc/xos/xtreemfs/truststore/certs'],
   }->

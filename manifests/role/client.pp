@@ -1,4 +1,7 @@
 class fogmail::role::client {
+
+  $ssl_base = '/vagrant/puppet'
+
   package {'xtreemfs-client':
     require => Apt::Source['xtreemfs'],
   }->
@@ -10,8 +13,8 @@ class fogmail::role::client {
   ::openssl::export::pkcs12 {'xtreemfs-client':
     ensure    => present,
     basedir   => '/etc/ssl/certs',
-    cert      => '/ssl/certs/client.crt',
-    pkey      => '/ssl/certs/client.key',
+    cert      => "${ssl_base}/ssl/certs/client.crt",
+    pkey      => "${ssl_base}/ssl/certs/client.key",
     chaincert => '/ssl/ca/sub-ca-chain.pem',
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
   }->

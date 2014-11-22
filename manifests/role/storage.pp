@@ -1,4 +1,7 @@
 class fogmail::role::storage {
+
+  $ssl_base = '/vagrant/puppet'
+
   class {'xtreemfs::role::storage':
     dir_service => hiera('xtreemfs::settings::dir_server'),
     object_dir  => '/mnt/xtreemfs',
@@ -20,8 +23,8 @@ class fogmail::role::storage {
   ::openssl::export::pkcs12 {'osd':
     ensure   => present,
     basedir  => '/etc/xos/xtreemfs/truststore/certs',
-    pkey     => '/ssl/certs/osd.key',
-    cert     => '/ssl/certs/osd.crt',
+    pkey     => "${ssl_base}/ssl/certs/osd.key",
+    cert     => "${ssl_base}/ssl/certs/osd.crt",
     out_pass => hiera('xtreemfs::service_cred::pwd'),
     require  => File['/etc/xos/xtreemfs/truststore/certs'],
   }->
