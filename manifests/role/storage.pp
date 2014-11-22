@@ -2,7 +2,7 @@ class fogmail::role::storage {
   class {'xtreemfs::role::storage':
     dir_service => hiera('xstreemfs::settings::dir_server'),
     object_dir  => '/mnt/xtreemfs',
-    extra       => {
+    properties  => {
       'report_free_space'           => 'true',
       'checksums.enabled'           => 'true',
       'checksums.algorithm'         => 'SHA-1',

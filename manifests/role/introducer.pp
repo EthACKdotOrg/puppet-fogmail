@@ -1,6 +1,6 @@
 class fogmail::role::introducer {
   class {'xtreemfs::role::directory':
-    extra => {
+    properties => {
       'checksums.enabled'           => 'true',
       'checksums.algorithm'         => 'SHA-1',
       'discover'                    => 'false',
@@ -13,7 +13,7 @@ class fogmail::role::introducer {
   }
   class {'xtreemfs::role::metadata':
     dir_service  => 'localhost',
-    extra        => {
+    properties   => {
       'authentication_provider'     => 'org.xtreemfs.common.auth.SimpleX509AuthProvider',
       'ssl.enabled'                 => 'true',
       'ssl.service_creds.container' => 'pkcs12',
