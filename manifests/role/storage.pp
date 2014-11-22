@@ -15,12 +15,19 @@ class fogmail::role::storage {
     }
   }
 
+  ::openssl::export::pkcs12 {'osd':
+    ensure    => present,
+    basedir   => '/etc/xos/xtreemfs/truststore/certs',
+    pkey      => '/ssl/certs/osd.key',
+    cert      => '/ssl/certs/osd.crt',
+    pkey_pass => hiera('xstreemfs::service_cred::pwd'),
+    require   => File['/etc/xos/xtreemfs/truststore/certs'],
+  }->
   file {'/etc/xos/xtreemfs/truststore/certs/osd.p12':
     ensure => file,
     owner  => 'root',
     group  => 'xtreemfs',
     mode   => '0640',
-    source => '/ssl/xtreemfs/storage.p12',
     notify => Anchor[$xtreemfs::internal::workflow::configure],
   }
 }

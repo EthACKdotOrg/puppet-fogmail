@@ -24,21 +24,36 @@ class fogmail::role::introducer {
     },
   }
 
+  Openssl::Export::Pkcs12 {
+    ensure  => present,
+    basedir => '/etc/xos/xtreemfs/truststore/certs',
+  }
+
+  ::openssl::export::pkcs12 {'ds':
+    pkey      => '/ssl/certs/ds.key',
+    cert      => '/ssl/certs/ds.crt',
+    pkey_pass => hiera('xstreemfs::service_cred::pwd'),
+    require   => File['/etc/xos/xtreemfs/truststore/certs'],
+  }->
   file {'/etc/xos/xtreemfs/truststore/certs/ds.p12':
     ensure => file,
     owner  => 'root',
     group  => 'xtreemfs',
     mode   => '0640',
-    source => '/ssl/xtreemfs/introducer.p12',
     notify => Anchor[$xtreemfs::internal::workflow::configure],
   }
 
+  ::openssl::export::pkcs12 {'mrc':
+    pkey      => '/ssl/certs/mrc.key',
+    cert      => '/ssl/certs/mrc.crt',
+    pkey_pass => hiera('xstreemfs::service_cred::pwd'),
+    require   => File['/etc/xos/xtreemfs/truststore/certs'],
+  }->
   file {'/etc/xos/xtreemfs/truststore/certs/mrc.p12':
     ensure => file,
     owner  => 'root',
     group  => 'xtreemfs',
     mode   => '0640',
-    source => '/ssl/xtreemfs/introducer.p12',
     notify => Anchor[$xtreemfs::internal::workflow::configure],
   }
 
