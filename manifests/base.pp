@@ -106,9 +106,14 @@ class fogmail::base(
     group   => 'xtreemfs',
     mode    => '0750',
   }->
-  java_ks {'xtreemfs:ca':
+  ::openssl::export::der {'xtreemfs:bundle-ca':
+    ensure  => present,
+    cert    => '/ssl/ca/sub-ca-chain.pem',
+    basedir => '/ssl/ca',
+  }->
+  java_ks {'xtreemfs:bundle':
     ensure       => latest,
-    certificate  => '/ssl/ca/ca.pem',
+    certificate  => '/ssl/ca/sub-ca-chain.pem',
     target       => '/etc/xos/xtreemfs/truststore/certs/trusted.jks',
     password     => hiera('xstreemfs::trusted_cred::pwd'),
     trustcacerts => true,
