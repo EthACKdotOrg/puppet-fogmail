@@ -2,6 +2,10 @@ class fogmail::base(
   $role,
 ) {
 
+  if $::debug == 1 {
+    include ::fogmail::debug
+  }
+
   # initialize apt
   class {'::apt':
     purge_sources_list   => true,
@@ -105,11 +109,6 @@ class fogmail::base(
     owner   => 'root',
     group   => 'xtreemfs',
     mode    => '0750',
-  }->
-  ::openssl::export::der {'xtreemfs:bundle-ca':
-    ensure  => present,
-    cert    => '/ssl/ca/sub-ca-chain.pem',
-    basedir => '/ssl/ca',
   }->
   java_ks {'xtreemfs:bundle':
     ensure       => latest,
