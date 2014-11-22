@@ -15,6 +15,7 @@ class fogmail::role::introducer {
     dir_service  => 'localhost',
     properties   => {
       'authentication_provider'     => 'org.xtreemfs.common.auth.SimpleX509AuthProvider',
+      'admin_passowrd'              => hiera('xtreemfs::admin_password'),
       'ssl.enabled'                 => 'true',
       'ssl.service_creds.container' => 'pkcs12',
       'ssl.service_creds.pw'        => hiera('xstreemfs::service_cred::pwd'),
@@ -23,6 +24,8 @@ class fogmail::role::introducer {
       'startup.wait_for_dir'        => 120,
     },
   }
+
+  include ::fogmail::xtreemfs::servers
 
   Openssl::Export::Pkcs12 {
     ensure  => present,

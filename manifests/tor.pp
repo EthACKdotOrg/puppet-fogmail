@@ -2,8 +2,6 @@ class fogmail::tor(
   $hidden_services,
 ) {
 
-  $tubPort = hiera('tubPort')
-  $webPort = hiera('webPort')
 
   # install torproject sourcelist
   ::apt::source {'torproject':

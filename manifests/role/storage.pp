@@ -15,6 +15,8 @@ class fogmail::role::storage {
     }
   }
 
+  include ::fogmail::xtreemfs::servers
+
   ::openssl::export::pkcs12 {'osd':
     ensure    => present,
     basedir   => '/etc/xos/xtreemfs/truststore/certs',

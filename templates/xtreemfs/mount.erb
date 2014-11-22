@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+mount.xtreemfs \
+  --pkcs12-file-path /etc/ssl/certs/xtreemfs-client.p12 \
+  --pkcs12-passphrase '<%=@pkcs_password%>' \
+  pbrpcs://<%=@dir_service%>/vmail \
+  /srv/encfs
+
+su -c "encfs -s '<%=@encfs_password%>' /srv/encfs /srv/vmail" vmail
