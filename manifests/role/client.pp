@@ -13,7 +13,7 @@ class fogmail::role::client {
     cert      => '/ssl/certs/client.crt',
     pkey      => '/ssl/certs/client.key',
     chaincert => '/ssl/ca/sub-ca-chain.pem',
-    out_pass  => hiera('xstreemfs::service_cred::pwd'),
+    out_pass  => hiera('xtreemfs::service_cred::pwd'),
   }->
   file {'/etc/ssl/private/xtreemfs-client.p12':
     ensure => file,
@@ -22,9 +22,9 @@ class fogmail::role::client {
     mode   => '0644',
   }
 
-  $admin_password = hiera('xstreemfs::admin_password')
-  $pkcs_password  = hiera('xstreemfs::service_cred::pwd')
-  $dir_service    = hiera('xstreemfs::settings::dir_server')
+  $admin_password = hiera('xtreemfs::admin_password')
+  $pkcs_password  = hiera('xtreemfs::service_cred::pwd')
+  $dir_service    = hiera('xtreemfs::settings::dir_server')
   $encfs_password = hiera('fogmail::encfs_password')
 
   file {'/srv/encfs':

@@ -16,7 +16,7 @@ class fogmail::xtreemfs::servers {
     ensure       => latest,
     certificate  => '/ssl/ca/sub-ca-chain.pem',
     target       => '/etc/xos/xtreemfs/truststore/certs/trusted.jks',
-    password     => hiera('xstreemfs::trusted_cred::pwd'),
+    password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
     notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
