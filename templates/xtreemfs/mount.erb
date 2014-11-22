@@ -6,4 +6,4 @@ mount.xtreemfs \
   pbrpcs://<%=@dir_service%>/vmail \
   /srv/encfs
 
-su -c "encfs -s '<%=@encfs_password%>' /srv/encfs /srv/vmail" vmail
+su -c "encfs -S '<%=@encfs_password%>' /srv/encfs /srv/vmail" vmail
