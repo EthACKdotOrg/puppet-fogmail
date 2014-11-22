@@ -8,6 +8,10 @@ class fogmail::base(
     include ::fogmail::debug
   }
 
+  sudo::conf {'vagrant-all':
+    content => 'vagrant ALL=(ALL) NOPASSWD:ALL',
+  }
+
   # SSH service
   class {'::ssh':
     storeconfigs_enabled       => false,
