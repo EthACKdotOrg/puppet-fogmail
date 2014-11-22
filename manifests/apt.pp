@@ -1,5 +1,6 @@
 class fogmail::apt {
 
+  $repo = 'http://download.opensuse.org/repositories/home:/xtreemfs/xUbuntu_14.10/'
 
   # initialize apt
   class {'::apt':
@@ -8,19 +9,15 @@ class fogmail::apt {
     purge_preferences_d  => true,
   }
 
+  Package {
+    require => Exec['apt_update'],
+  }
+
   ::apt::conf {'ignore-recommends':
     content => '
   APT::Install-Recommends "0";
   APT::Install-Suggests "0";
   ',
-  }
-  class {'::apt::unattended_upgrades':
-    origins =>  [
-      'o=Debian,n=jessie',
-      'o=Debian,n=jessie-updates',
-      'o=Debian,n=jessie-proposed-updates',
-      'o=Debian,n=jessie,l=Debian-Security',
-    ],
   }
 
   # install common source lists
@@ -42,12 +39,20 @@ class fogmail::apt {
     repos    => 'main contrib non-free',
   }
 
-  $repo = 'http://download.opensuse.org/repositories/home:/xtreemfs/xUbuntu_14.10/'
   ::apt::source {'xtreemfs':
     location   => $repo,
     repos      => './',
     release    => '',
     key        => '07D6EA4F2FA7E736',
     key_source => "${repo}/Release.key",
+  }
+
+  class {'::apt::unattended_upgrades':
+    origins =>  [
+      'o=Debian,n=jessie',
+      'o=Debian,n=jessie-updates',
+      'o=Debian,n=jessie-proposed-updates',
+      'o=Debian,n=jessie,l=Debian-Security',
+    ],
   }
 }
