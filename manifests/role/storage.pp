@@ -8,7 +8,7 @@ class fogmail::role::storage {
     properties  => {
       'report_free_space'           => 'true',
       'checksums.enabled'           => 'true',
-      'checksums.algorithm'         => 'SHA-1',
+      'checksums.algorithm'         => hiera('xtreemfs::checksums::algo'),
       'ssl.enabled'                 => 'true',
       'ssl.service_creds.container' => 'pkcs12',
       'ssl.service_creds.pw'        => hiera('xtreemfs::service_cred::pwd'),

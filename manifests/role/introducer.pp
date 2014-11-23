@@ -5,7 +5,7 @@ class fogmail::role::introducer {
   class {'xtreemfs::role::directory':
     properties => {
       'checksums.enabled'           => 'true',
-      'checksums.algorithm'         => 'SHA-1',
+      'checksums.algorithm'         => hiera('xtreemfs::checksums::algo'),
       'discover'                    => 'false',
       'ssl.enabled'                 => 'true',
       'ssl.service_creds.container' => 'pkcs12',
