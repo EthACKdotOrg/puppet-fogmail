@@ -13,12 +13,18 @@ class fogmail::apt {
     require => Exec['apt_update'],
   }
 
-  ::apt::conf {'ignore-recommends':
+  ::apt::conf {'ignore-suggests':
     content => '
-  APT::Install-Recommends "0";
   APT::Install-Suggests "0";
   ',
   }
+
+  ::apt::pin {'nox':
+    packages => 'xserver-xorg-core',
+    origin   => 'Debian',
+    priority => '-1',
+  }
+
 
   # install common source lists
   ::apt::source {$::lsbdistcodename:
