@@ -11,10 +11,11 @@ class fogmail::scripts {
 
   # Replication stuff
   @file {'/usr/local/bin/replication-bootstrap':
-    ensure => file,
-    mode   => '0700',
-    owner  => 'postgres',
-    group  => 'postgres',
-    source => 'puppet:///modules/fogmail/scripts/replication-bootstrap',
+    ensure  => file,
+    mode    => '0700',
+    owner   => 'postgres',
+    group   => 'postgres',
+    require => Class['postgresql::server'],
+    source  => 'puppet:///modules/fogmail/scripts/replication-bootstrap',
   }
 }
