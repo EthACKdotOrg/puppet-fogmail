@@ -15,7 +15,7 @@ class fogmail::role::client {
     basedir   => '/etc/ssl/certs',
     cert      => "${ssl_base}/ssl/certs/client.crt",
     pkey      => "${ssl_base}/ssl/certs/client.key",
-    chaincert => '/ssl/ca/sub-ca-chain.pem',
+    chaincert => "${ssl_base}/ssl/ca/sub-ca-chain.pem",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
   }->
   file {'/etc/ssl/private/xtreemfs-client.p12':
