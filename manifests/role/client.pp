@@ -13,12 +13,12 @@ class fogmail::role::client {
   ::openssl::export::pkcs12 {'xtreemfs-client':
     ensure    => present,
     basedir   => '/etc/ssl/certs',
-    cert      => "${ssl_base}/ssl/certs/client.crt",
-    pkey      => "${ssl_base}/ssl/certs/client.key",
-    chaincert => "${ssl_base}/ssl/ca/sub-ca-chain.pem",
+    cert      => "${ssl_base}/ssl/certs/${::hostname}.crt",
+    pkey      => "${ssl_base}/ssl/certs/${::hostname}.key",
+    chaincert => "${ssl_base}/ssl/ca/common-ca-chain.pem",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
   }->
-  file {'/etc/ssl/private/xtreemfs-client.p12':
+  file {'/etc/ssl/certs/xtreemfs-client.p12':
     ensure => file,
     owner  => 'xtreemfs',
     group  => 'xtreemfs',
