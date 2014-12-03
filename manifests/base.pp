@@ -49,9 +49,6 @@ class fogmail::base(
   }->
 
   class {"::fogmail::role::${role}":
-  }->
-
-  package {'xtreemfs-tools':
   }
 
 
