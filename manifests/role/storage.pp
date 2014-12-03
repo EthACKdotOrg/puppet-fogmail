@@ -14,7 +14,7 @@ class fogmail::role::storage {
       'ssl.service_creds'           => "${creds_base}/osd.p12",
       'ssl.service_creds.container' => 'pkcs12',
       'ssl.service_creds.pw'        => hiera('xtreemfs::service_cred::pwd'),
-      'ssl.trusted_certs'           => "${creds_base}/dir.jks",
+      'ssl.trusted_certs'           => "${creds_base}/osd.jks",
       'ssl.trusted_certs.container' => 'jks',
       'ssl.trusted_certs.pw'        => hiera('xtreemfs::trusted_cred::pwd'),
       'startup.wait_for_dir'        => 120,
@@ -27,8 +27,7 @@ class fogmail::role::storage {
     ensure    => present,
     basedir   => $creds_base,
     pkey      => "${ssl_base}/ssl/certs/${::hostname}.key",
-    cert      => "${ssl_base}/ssl/certs/${::hostname}.crt",
-    chaincert => "${ssl_base}/ssl/ca/osd-ca-chain.pem",
+    cert      => "${ssl_base}/ssl/certs/osd-${::hostname}.crt",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
     require   => File[$creds_base],
   }->

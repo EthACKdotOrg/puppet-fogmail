@@ -14,59 +14,65 @@ class fogmail::xtreemfs::servers {
     tag     => 'cacert',
   }
 
-  java_ks {'xtreemfs_mrc:client':
+  ## MRC jks: trusts client-ca, dir-ca
+  java_ks {'mrc_client_ca':
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/client-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/client-ca.crt",
     target       => "${ks_base}/mrc.jks",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
     notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
   
-  java_ks {"ks_common_mrc:${ks_base}/mrc.jks":
+  java_ks {"mrc_dir_ca:${ks_base}/mrc.jks":
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/common-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/dir-ca.crt",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
     notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
   
-  java_ks {'xtreemfs_dir:osd':
+  ## DIR jks: trusts client-ca, mrc-ca, osd-ca
+  java_ks {'dir_client_ca':
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/osd-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/client-ca.crt",
     target       => "${ks_base}/dir.jks",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
     notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
 
-  java_ks {"ks_common_dir:${ks_base}/dir.jks":
+  java_ks {"dir_mrc_ca:${ks_base}/dir.jks":
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/common-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/mrc-ca.crt",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
     notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
 
-  java_ks {'xtreemfs:all':
+  java_ks {"dir_osd_ca:${ks_base}/dir.jks":
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/common-ca-chain.pem",
-    target       => "${ks_base}/all.jks",
+    certificate  => "${ssl_base}/ssl/ca/osd-ca.crt",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
+    notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
 
-  java_ks {"all_client:${ks_base}/all.jks":
+  ## OSD jks: trusts client-ca, dir-ca
+  java_ks {'osd_client_ca':
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/client-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/client-ca.crt",
+    target       => "${ks_base}/osd.jks",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
+    notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
-
-  java_ks {"all_osd:${ks_base}/all.jks":
+  
+  java_ks {"osd_dir_ca:${ks_base}/osd.jks":
     ensure       => latest,
-    certificate  => "${ssl_base}/ssl/ca/osd-ca-chain.pem",
+    certificate  => "${ssl_base}/ssl/ca/dir-ca.crt",
     password     => hiera('xtreemfs::trusted_cred::pwd'),
     trustcacerts => true,
+    notify       => Anchor[$xtreemfs::internal::workflow::configure],
   }
 }

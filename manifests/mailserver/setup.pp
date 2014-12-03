@@ -19,7 +19,7 @@ class fogmail::mailserver::setup {
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    source => "${ssl_base}/ssl/certs/mail.crt",
+    source => "${ssl_base}/ssl/certs/osd-mail.crt",
   }->
   file {'/etc/dovecot/private/dovecot.pem':
     ensure => file,

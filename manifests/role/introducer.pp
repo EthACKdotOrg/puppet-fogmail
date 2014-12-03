@@ -43,8 +43,7 @@ class fogmail::role::introducer {
 
   ::openssl::export::pkcs12 {'dir':
     pkey      => "${ssl_base}/ssl/certs/${::hostname}-dir.key",
-    cert      => "${ssl_base}/ssl/certs/${::hostname}-dir.crt",
-    chaincert => "${ssl_base}/ssl/ca/common-ca-chain.pem",
+    cert      => "${ssl_base}/ssl/certs/dir-${::hostname}-dir.crt",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
     require   => File[$creds_base],
   }->
@@ -58,8 +57,7 @@ class fogmail::role::introducer {
 
   ::openssl::export::pkcs12 {'mrc':
     pkey      => "${ssl_base}/ssl/certs/${::hostname}-mrc.key",
-    cert      => "${ssl_base}/ssl/certs/${::hostname}-mrc.crt",
-    chaincert => "${ssl_base}/ssl/ca/common-ca-chain.pem",
+    cert      => "${ssl_base}/ssl/certs/mrc-${::hostname}-mrc.crt",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
     require   => File[$creds_base],
   }->
