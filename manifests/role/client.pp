@@ -2,9 +2,6 @@ class fogmail::role::client {
 
   $ssl_base = '/vagrant/puppet'
 
-  package {'xtreemfs-client':
-    require => Apt::Source['xtreemfs'],
-  }->
   user {'xtreemfs':
     ensure => present,
     system => true,
@@ -13,9 +10,8 @@ class fogmail::role::client {
   ::openssl::export::pkcs12 {'xtreemfs-client':
     ensure    => present,
     basedir   => '/etc/ssl/certs',
-    cert      => "${ssl_base}/ssl/certs/${::hostname}.crt",
+    cert      => "${ssl_base}/ssl/certs/client-${::hostname}.crt",
     pkey      => "${ssl_base}/ssl/certs/${::hostname}.key",
-    chaincert => "${ssl_base}/ssl/ca/common-ca-chain.pem",
     out_pass  => hiera('xtreemfs::service_cred::pwd'),
   }->
   file {'/etc/ssl/certs/xtreemfs-client.p12':
@@ -30,11 +26,19 @@ class fogmail::role::client {
   $dir_service    = hiera('xtreemfs::settings::dir_server')
   $encfs_password = hiera('fogmail::encfs_password')
 
-  file {'/srv/encfs':
-    ensure => directory,
-  }
 
-  package {'encfs': }
+  $dir = hiera('xtreemfs::settings::dir_server')
+  ::xtreemfs::volume {'vmail':
+    ensure      => present,
+    dir_service => "pbrpcs://${dir}",
+    options     => {
+      '--admin_password' => hiera('xtreemfs::admin_password'),
+      '--pkcs12-file-path'  => '/etc/ssl/certs/xtreemfs-client.p12',
+      '--pkcs12-passphrase' => hiera('xtreemfs::service_cred::pwd'),
+      '-s'                  => 64,
+      '-w'                  => 3,
+    },
+  }
 
   file {'/usr/local/sbin/xtreem-prepare':
     ensure  => file,
