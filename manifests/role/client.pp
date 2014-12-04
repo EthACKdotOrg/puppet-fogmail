@@ -42,15 +42,15 @@ class fogmail::role::client {
     #owner  => 'vmail',
     #group  => 'vmail',
   }->
-  ::xtreemfs::mount {'/srv/crypted':
-    ensure      => mounted,
-    volume      => 'vmail',
-    dir_service => $dir_service,
-  }->
-  ::xtreemfs::policy {'/srv/encrypted':
-    policy => 'WqRq',
-    factor => 4,
-  }
+#  ::xtreemfs::mount {'/srv/crypted':
+#    ensure      => mounted,
+#    volume      => 'vmail',
+#    dir_service => $dir_service,
+#  }->
+#  ::xtreemfs::policy {'/srv/encrypted':
+#    policy => 'WqRq',
+#    factor => 4,
+#  }
 
   file {'/usr/local/sbin/xtreem-prepare':
     ensure  => file,
