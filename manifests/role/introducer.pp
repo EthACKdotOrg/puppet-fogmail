@@ -1,72 +1,28 @@
 class fogmail::role::introducer {
 
-  $ssl_base = '/vagrant/puppet'
-
   $creds_base = '/etc/xos/xtreemfs/truststore'
-  
-  class {'xtreemfs::role::directory':
-    properties => {
-      'checksums.enabled'           => 'true',
-      'checksums.algorithm'         => hiera('xtreemfs::checksums::algo'),
-      'discover'                    => 'false',
-      'ssl.enabled'                 => 'true',
-      'ssl.service_creds'           => "${creds_base}/dir.p12",
-      'ssl.service_creds.container' => 'pkcs12',
-      'ssl.service_creds.pw'        => hiera('xtreemfs::service_cred::pwd'),
-      'ssl.trusted_certs'           => "${creds_base}/dir.jks",
-      'ssl.trusted_certs.container' => 'jks',
-      'ssl.trusted_certs.pw'        => hiera('xtreemfs::trusted_cred::pwd'),
-    }
-  }
-  class {'xtreemfs::role::metadata':
-    dir_service  => 'localhost',
-    properties   => {
-      'authentication_provider'     => 'org.xtreemfs.common.auth.SimpleX509AuthProvider',
-      'admin_passowrd'              => hiera('xtreemfs::admin_password'),
-      'ssl.enabled'                 => 'true',
-      'ssl.service_creds'           => "${creds_base}/mrc.p12",
-      'ssl.service_creds.container' => 'pkcs12',
-      'ssl.service_creds.pw'        => hiera('xtreemfs::service_cred::pwd'),
-      'ssl.trusted_certs'           => "${creds_base}/mrc.jks",
-      'ssl.trusted_certs.container' => 'jks',
-      'ssl.trusted_certs.pw'        => hiera('xtreemfs::trusted_cred::pwd'),
-      'startup.wait_for_dir'        => 120,
+
+
+  class {'::fogstore':
+    client_ca           => 'ca/client-ca.crt',
+    client_jks_password => hiera('xtreemfs::trusted_client::pwd'),
+    cred_certs          => {
+      dir               => "certs/dir-${hostname}-dir.crt",
+      mrc               => "certs/mrc-${hostname}-mrc.crt",
     },
+    cred_keys => {
+      dir     => "certs/${hostname}-dir.key",
+      mrc     => "certs/${hostname}-mrc.key",
+    },
+    dir_ca           => 'ca/dir-ca.crt',
+    dir_jks_password => hiera('xtreemfs::trusted_dir::pwd'),
+    cred_password    => hiera('xtreemfs::service_cred::pwd'),
+    mrc_ca           => 'ca/mrc-ca.crt',
+    mrc_jks_password => hiera('xtreemfs::trusted_mrc::pwd'),
+    osd_ca           => 'ca/osd-ca.crt',
+    osd_jks_password => hiera('xtreemfs::trusted_osd::pwd'),
+    role             => 'introducer',
+    ssl_source_dir   => '/vagrant/puppet',
+    trusted_password => hiera('xtreemfs::trusted_cred::pwd'),
   }
-
-  include ::fogmail::xtreemfs::servers
-
-  Openssl::Export::Pkcs12 {
-    ensure  => present,
-    basedir => $creds_base,
-  }
-
-  ::openssl::export::pkcs12 {'dir':
-    pkey      => "${ssl_base}/ssl/certs/${::hostname}-dir.key",
-    cert      => "${ssl_base}/ssl/certs/dir-${::hostname}-dir.crt",
-    out_pass  => hiera('xtreemfs::service_cred::pwd'),
-    require   => File[$creds_base],
-  }->
-  file {"${creds_base}/dir.p12":
-    ensure => file,
-    owner  => 'root',
-    group  => 'xtreemfs',
-    mode   => '0640',
-    notify => Anchor[$xtreemfs::internal::workflow::configure],
-  }
-
-  ::openssl::export::pkcs12 {'mrc':
-    pkey      => "${ssl_base}/ssl/certs/${::hostname}-mrc.key",
-    cert      => "${ssl_base}/ssl/certs/mrc-${::hostname}-mrc.crt",
-    out_pass  => hiera('xtreemfs::service_cred::pwd'),
-    require   => File[$creds_base],
-  }->
-  file {"${creds_base}/mrc.p12":
-    ensure => file,
-    owner  => 'root',
-    group  => 'xtreemfs',
-    mode   => '0640',
-    notify => Anchor[$xtreemfs::internal::workflow::configure],
-  }
-
 }
